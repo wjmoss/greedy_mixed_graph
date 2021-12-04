@@ -1,0 +1,32 @@
+#忽略当前文件夹下的.DS_Store文件
+.DS_Store
+#忽略所有子目录下的.DS_Store
+*/.DS_Store
+#忽略所有的.a文件
+*.a
+#否定忽略test.a文件, 即时前面忽略了所有的.a文件
+!test.a
+#忽略根目录下的build文件夹
+build/
+#忽略wj文件夹下面的所有目录, 不管是根目录下的/wj/, 还是子目录下的 /child/wj/
+wj/*
+#忽略根目录下wj下的所有目录
+/wj/*
+#忽略当前文件夹下的TOOD, 不包括子目录下的/child/TOOD
+/TOOD
+#忽略/doc/test.txt,不能忽略/doc/test/test.txt
+doc/*.txt
+#有一种写法
+#忽略全部
+#/*
+#不忽略.gitignore, 不忽略wj文件夹
+!.gitignore
+!/wj
+
+draft*.py
+main.py
+experiment*.py
+*old.py
+
+**/__pycache__
+**/.idea
