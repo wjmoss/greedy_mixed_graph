@@ -3,10 +3,9 @@ import math
 import time
 import copy
 import multiprocessing as mp
-from functools import partial
 
-from ricf import ricf
-from generate import SimpleGraph, generateParams, generateMixedGraph, ParamedSimpleGraph
+from greedy_mixed_graph.ricf import ricf
+from greedy_mixed_graph.generate import SimpleGraph, ParamedSimpleGraph, generate_params, generate_mixed_graph
 
 set_edge_penalty = 1
 
@@ -112,11 +111,11 @@ class GreedySearch:
         else:
             scores = []
             for i in range(self.reinitialization):
-                Linit, Oinit = generateParams(L, O)
+                Linit, Oinit = generate_params(L, O)
                 flag = 0
                 try:
                     res = ricf(S=self.cov_mat, O=O, L=L, Linit=Linit, Oinit=Oinit, sigconv=False, tol=1e-6,
-                                    maxiter=self.max_iter, out="none", maxkap=1e9)
+                               maxiter=self.max_iter, out="none", maxkap=1e9)
                 except Exception as e:
                     flag = 1
                     print('Exception:', e)
@@ -140,7 +139,7 @@ class GreedySearch:
             maxscore = max(scores)
         return maxscore
 
-    def greedy_search_one_rep(self, mg:SimpleGraph):
+    def greedy_search_one_rep(self, mg: SimpleGraph):
         k = 1
         t = time.time()
         p = self.cov_mat.shape[0]
@@ -307,13 +306,15 @@ class GreedySearch:
     def greedy_search(self, n_restarts, mc_cores):
         if self.mg_start is None:
             p1 = 1 if self.dags_only else 0.5
-            mg_stash = generateMixedGraph(p=self.cov_mat.shape[0], N=n_restarts, p1=p1, max_in_degree=1)
+            mg_stash = generate_mixed_graph(p=self.cov_mat.shape[0], n=n_restarts, p1=p1, max_in_degree=1)
             mg_stash = list(map(SimpleGraph, mg_stash))
         elif isinstance(self.mg_start, SimpleGraph):
             mg_stash = [self.mg_start] * n_restarts
         elif isinstance(self.mg_start, list):
-            ind = np.random.choice(len(self.mg_start), n_restarts, replace=False)
-            mg_stash = self.mg_start[np.random.choice(len(self.mg_start), n_restarts, replace=False)]
+            indices = np.random.choice(len(self.mg_start), n_restarts, replace=False)
+            mg_stash = [self.mg_start[i] for i in indices]
+            #only integer scalar arrays can be converted to a scalar index
+            #mg_stash = self.mg_start[np.random.choice(len(self.mg_start), n_restarts, replace=False)]
         else:
             raise TypeError("Invalid mg_start type!")
 
@@ -339,9 +340,9 @@ class GreedySearch:
 
 if __name__ == '__main__':
     np.random.seed(19260817)
-    graphs = generateMixedGraph(p=5, N=10)
+    graphs = generate_mixed_graph(p=5, n=10)
     g = ParamedSimpleGraph(graphs[0])
-    params = generateParams(L=g.L, O=g.O)
+    params = generate_params(L=g.L, O=g.O)
     g.assignParams(params[0], params[1])
     g.generateData(10000)
     Glist = [g.mg] * 10

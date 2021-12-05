@@ -1,10 +1,9 @@
 import numpy as np
-import time
 import math
 
 
-def generateMixedGraph(p, N, iteration=None, p1=0.5, p2=0, p3=0, max_in_degree=np.Inf):
-    # N: number of graphs
+def generate_mixed_graph(p, n, iteration=None, p1=0.5, p2=0, p3=0, max_in_degree=np.Inf):
+    # n: number of graphs
     # p1: P(directed | empty) = P(empty | directed)
     # 1-p1: P(bidirected | empty) = P(empty | bidirected)
     # p2: P(bidirected | directed) = P(directed | bidirected)
@@ -24,7 +23,7 @@ def generateMixedGraph(p, N, iteration=None, p1=0.5, p2=0, p3=0, max_in_degree=n
     else:
         iteration = max(6 * p ** 2, iteration)
     res = []
-    for k in range((N + 1) * iteration):
+    for k in range((n + 1) * iteration):
         # for some checking?
         # mg_old = mg.copy()
 
@@ -77,8 +76,8 @@ def generateMixedGraph(p, N, iteration=None, p1=0.5, p2=0, p3=0, max_in_degree=n
     return res
 
 
-def generateParams(L, O, dist="snormal", posneg=True, Oscale=1):
-    # Randomly generate edge weights and error covariance matrix
+def generate_params(L, O, dist="snormal", posneg=True, Oscale=1):
+    # Randomly gendata edge weights and error covariance matrix
     # dist is normal or uniform
     # posneg: boolean, whether or not to use both postive and negetive edge weights
     Lval = L * 1.0
@@ -239,7 +238,7 @@ class ParamedSimpleGraph(SimpleGraph):
         #log-likelihood / n
         n = self.data.shape[0]
         return -0.5 * (self.p * math.log(2 * math.pi) + math.log(np.linalg.det(self.sigma)) +
-                            (n - 1) / n * sum(np.diag(np.linalg.inv(self.sigma) @ np.cov(self.data.T))))
+                       (n - 1) / n * sum(np.diag(np.linalg.inv(self.sigma) @ np.cov(self.data.T))))
 
     def isFaithful(self, faithful_eps):
         indL = np.where(self.L != 0)
@@ -256,19 +255,21 @@ class ParamedSimpleGraph(SimpleGraph):
         self.data = eps @ np.linalg.inv(np.identity(self.p) - self.Lval)
 
 
-class EstimatedGraph():
-    def __init__(self):
-        pass
+class EstimatedGraph(ParamedSimpleGraph):
+    def __init__(self, mg):
+        #tbd
+        super(EstimatedGraph, self).__init__(mg)
 
 
 if __name__ == '__main__':
-    np.random.seed(19260817)
-    graphs = generateMixedGraph(p=4, N=10)
+    #np.random.seed(19260817)
+    graphs = generate_mixed_graph(p=4, n=10)
     print(graphs)
     g = ParamedSimpleGraph(graphs[0])
-    params = generateParams(L=g.L, O=g.O)
+    params = generate_params(L=g.L, O=g.O)
     g.assignParams(params[0], params[1])
-    g.generateData(1000)
+    g.generateData(1000000)
     # print(g.getSigma())
     # print(g.data.shape)
     # print(np.cov(g.data.T))
+    print(np.max(abs(np.cov(g.data.T) - g.sigma)))

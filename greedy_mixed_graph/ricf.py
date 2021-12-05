@@ -129,7 +129,6 @@ def ricf(S, O, L = None, Linit=None, Oinit=None, sigconv=True, tol=1e-6,
             if not visited[u]:
                 tarjan(u, dft, low, count, visited, stack)
 
-
         while True:
             for i in range(p):
                 # O[i, -i] is zero vector means no spouses
