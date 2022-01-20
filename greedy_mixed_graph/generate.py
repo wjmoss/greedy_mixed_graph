@@ -32,8 +32,8 @@ def generate_mixed_graph(p, n, iteration=None, p1=0.5, p2=0, p3=0, max_in_degree
         j = np.random.randint(p)
 
         # compute in-degree at the position and its transpose
-        in_degree = len(np.where(mg[:, j] > 0)) < max_in_degree
-        in_degree_t = len(np.where(mg[:, i] > 0)) < max_in_degree
+        in_degree = len(np.argwhere(mg[:, j] > 0)) < max_in_degree
+        in_degree_t = len(np.argwhere(mg[:, i] > 0)) < max_in_degree
 
         # no edge - add directed edge or bidirected edge
         if mg[i, j] == 0 and mg[j, i] == 0 and i != j:
@@ -259,17 +259,3 @@ class EstimatedGraph(ParamedSimpleGraph):
     def __init__(self, mg):
         #tbd
         super(EstimatedGraph, self).__init__(mg)
-
-
-if __name__ == '__main__':
-    #np.random.seed(19260817)
-    graphs = generate_mixed_graph(p=4, n=10)
-    print(graphs)
-    g = ParamedSimpleGraph(graphs[0])
-    params = generate_params(L=g.L, O=g.O)
-    g.assignParams(params[0], params[1])
-    g.generateData(1000000)
-    # print(g.getSigma())
-    # print(g.data.shape)
-    # print(np.cov(g.data.T))
-    print(np.max(abs(np.cov(g.data.T) - g.sigma)))

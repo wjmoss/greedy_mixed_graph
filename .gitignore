@@ -28,8 +28,6 @@ share/python-wheels/
 *.egg
 MANIFEST
 
-drafts/
-.idea/
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -142,3 +140,8 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
+# drafts
+drafts/
+
+
+.idea/

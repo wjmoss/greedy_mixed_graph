@@ -1,1 +1,1 @@
-__all__ = {"generate", "greedysearch", "ricf"}
+__all__ = {"generate", "greedysearch", "plot", "ricf"}

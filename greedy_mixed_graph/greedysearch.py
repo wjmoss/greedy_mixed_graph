@@ -56,6 +56,7 @@ class GreedySearch:
         self.n = n
         self.cov_mat = cov_mat
 
+        # mg_start can be a SimpleGraph object or a matrix (2 dim np array)
         if isinstance(mg_start, SimpleGraph):
             self.mg_start = mg_start
         elif isinstance(mg_start, np.ndarray) and mg_start.shape[0] == mg_start.shape[1]:
@@ -336,19 +337,3 @@ class GreedySearch:
         times = list(map(lambda x: x[3], res))
 
         return SearchResult(final_graph, final_score, all_graphs, all_scores, times)
-
-
-if __name__ == '__main__':
-    np.random.seed(19260817)
-    graphs = generate_mixed_graph(p=5, n=10)
-    g = ParamedSimpleGraph(graphs[0])
-    params = generate_params(L=g.L, O=g.O)
-    g.assignParams(params[0], params[1])
-    g.generateData(10000)
-    Glist = [g.mg] * 10
-    GS = GreedySearch(mg_start=g.mg, n=10000, cov_mat=np.cov(g.data.T), bic='std_bic')
-    GS = GreedySearch(n=10000, cov_mat=np.cov(g.data.T), bic='ext_bic')
-    result = GS.greedy_search(n_restarts=10, mc_cores=2)
-    print('hhh')
-    print(g.mg)
-    print(result.final_graph.mg)

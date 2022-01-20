@@ -16,8 +16,9 @@ setup(
         ],
     # packages=setuptools.find_packages(),
     py_modules=[
-        "greedy-mixed-graph.generate",
-        "greedy-mixed-graph.greedysearch",
-        "greedy-mixed-graph.ricf"
+        "greedy_mixed_graph.generate",
+        "greedy_mixed_graph.greedysearch",
+        "greedy_mixed_graph.plot"
+        "greedy_mixed_graph.ricf"
         ]
     )
