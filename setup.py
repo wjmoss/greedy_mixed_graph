@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setup(
-    name="greedy-mixed-graph",
+    name="greedy_mixed_graph",
     version="0.1.0",
     author="wjmoss",
     author_email="wujun3544@gmail.com",
