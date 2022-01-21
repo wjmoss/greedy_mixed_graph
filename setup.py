@@ -18,7 +18,7 @@ setup(
     py_modules=[
         "greedy_mixed_graph.generate",
         "greedy_mixed_graph.greedysearch",
-        "greedy_mixed_graph.plot"
+        "greedy_mixed_graph.plot",
         "greedy_mixed_graph.ricf"
         ]
     )
